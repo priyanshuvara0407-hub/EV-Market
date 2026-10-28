@@ -1,0 +1,5 @@
+# Python Dependencies for Electric Vehicle Market Performance & Insights Webpage
+# Author: Priyanshu Vara
+
+Flask>=3.0.0
+gunicorn>=21.2.0

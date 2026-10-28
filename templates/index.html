@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Electric Vehicle Market Performance & Insights by Priyanshu Vara. Live interactive Tableau dashboards and stories analyzing EV adoption, manufacturers, sales, and battery technology.">
+  <meta name="author" content="Priyanshu Vara">
+  <title>Electric Vehicle Market Performance & Insights | Priyanshu Vara</title>
+  
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+  </style>
+
+  <!-- Tableau Embedding API v3 (Modern Web Component Support) -->
+  <script type="module" src="https://public.tableau.com/javascripts/api/tableau.embedding.3.latest.min.js"></script>
+
+  <!-- Central Configuration -->
+  <script src="{{ url_for('static', filename='js/config.js') }}"></script>
+</head>
+<body>
+
+  <!-- ==========================================================================
+       TOP NAVIGATION BAR
+       ========================================================================== -->
+  <header class="site-header" role="banner">
+    <div class="container nav-container">
+      <a href="#home" class="brand-logo" aria-label="EV Insights Home">
+        <span class="brand-icon">⚡</span>
+        <span>EV Insights</span>
+      </a>
+
+      <!-- Centered Nav Links -->
+      <nav aria-label="Main Navigation">
+        <ul class="nav-menu" id="navMenu">
+          <li><a href="#home" class="nav-link active">Home</a></li>
+          <li><a href="#about" class="nav-link">About</a></li>
+          <li><a href="#features" class="nav-link">Features</a></li>
+          <li><a href="#services" class="nav-link">Services</a></li>
+          <li><a href="#dashboard" class="nav-link">Dashboard</a></li>
+          <li><a href="#story" class="nav-link">Story</a></li>
+        </ul>
+      </nav>
+
+      <!-- Right Action CTA Buttons -->
+      <div class="nav-actions">
+        <a href="#dashboard" class="btn btn-gold btn-sm">Explore Dashboard</a>
+        <a href="#story" class="btn btn-gold btn-sm">Explore Story</a>
+      </div>
+
+      <!-- Mobile Hamburger Button -->
+      <button class="mobile-nav-toggle" id="mobileNavToggle" aria-label="Toggle navigation menu" aria-expanded="false">
+        ☰
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <!-- ==========================================================================
+         1. HOME / HERO SECTION (EV Themed Visual - No Tableau Screenshots)
+         ========================================================================== -->
+    <section id="home" class="hero-section">
+      <div class="container">
+        <div class="hero-content">
+          <div class="hero-badge">
+            <span>⚡</span> Electric Vehicle Market Performance & Insights
+          </div>
+          
+          <h1 class="hero-title">
+            Transform Your Workflow With<br>
+            <span id="dynamicWord" class="dynamic-word">Seamless</span><span class="typing-cursor">|</span>
+          </h1>
+
+          <p class="hero-subtitle">
+            Explore live EV market intelligence, adoption trends, and the story behind the growth of electric mobility through a polished dashboard and narrative experience.
+          </p>
+
+          <div class="hero-cta-group">
+            <a href="#dashboard" class="btn btn-gold btn-lg">
+              Explore the Dashboard <span>→</span>
+            </a>
+            <a href="#story" class="btn btn-dark btn-lg">
+              <span>📖</span> Explore Story
+            </a>
+          </div>
+        </div>
+
+        <!-- EV-Themed Cockpit & Telemetry Display (Adhering to: No screenshots or static images of the Tableau dashboard or story) -->
+        <div class="hero-ev-telemetry-wrapper">
+          <div class="hero-ev-telemetry-card">
+            <div class="telemetry-grid-bg"></div>
+            
+            <!-- Top Telemetry Status Bar -->
+            <div class="telemetry-header-bar">
+              <div class="telemetry-sys-id">
+                <span>⚡ EV-TELEMETRY // DUAL-MOTOR AWD PLATFORM</span>
+                <span class="telemetry-status-pill">
+                  <span class="pulse-dot"></span> LIVE TELEMETRY STREAM
+                </span>
+              </div>
+              <div class="telemetry-specs">
+                <span>🔋 800V Architecture</span>
+                <span>⚡ 350kW DC Fast Charge</span>
+                <span>🛡️ Fleet Protocol v4.2</span>
+              </div>
+            </div>
+
+            <!-- Central Electric Vehicle Silhouette & Energy Pulse -->
+            <div class="telemetry-vehicle-showcase">
+              <svg class="ev-vehicle-svg" viewBox="0 0 700 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- Vehicle Body Aerodynamic Silhouette -->
+                <path d="M 60 170 Q 110 165 180 145 L 260 85 Q 360 60 500 85 L 580 140 Q 640 160 670 170 C 675 180 660 195 620 195 L 110 195 C 70 195 55 180 60 170 Z" 
+                      fill="url(#evBodyGradient)" stroke="#e5a93c" stroke-width="2" stroke-opacity="0.8" />
+                
+                <!-- Cabin Glass / Greenhouse -->
+                <path d="M 230 135 L 285 88 Q 365 72 475 92 L 530 135 Z" 
+                      fill="rgba(229, 169, 60, 0.08)" stroke="#fbbf24" stroke-width="1.5" stroke-opacity="0.6" />
+
+                <!-- Front Headlight LED Bar (Amber Glow) -->
+                <path d="M 630 160 L 665 168 L 655 174 Z" fill="#fbbf24" filter="url(#glowAmber)" />
+                <line x1="640" y1="165" x2="695" y2="165" stroke="#fbbf24" stroke-width="3" filter="url(#glowAmber)" />
+
+                <!-- Rear Taillight LED Bar -->
+                <line x1="58" y1="168" x2="85" y2="168" stroke="#ef4444" stroke-width="3" filter="url(#glowAmber)" />
+
+                <!-- High Voltage Battery Floorpack (Glow) -->
+                <rect x="220" y="172" width="280" height="16" rx="4" fill="rgba(229, 169, 60, 0.2)" stroke="#e5a93c" stroke-width="1.5" />
+                <line x1="235" y1="180" x2="485" y2="180" stroke="#fbbf24" stroke-width="2" stroke-dasharray="8 6" />
+
+                <!-- Front Electric Motor (AWD) -->
+                <circle cx="560" cy="180" r="16" fill="#11141a" stroke="#e5a93c" stroke-width="2" />
+                <circle cx="560" cy="180" r="6" fill="#fbbf24" />
+                <text x="560" y="215" text-anchor="middle" fill="#8e9bb0" font-size="10" font-family="monospace">FRONT 180kW</text>
+
+                <!-- Rear Electric Motor (AWD) -->
+                <circle cx="160" cy="180" r="16" fill="#11141a" stroke="#e5a93c" stroke-width="2" />
+                <circle cx="160" cy="180" r="6" fill="#fbbf24" />
+                <text x="160" y="215" text-anchor="middle" fill="#8e9bb0" font-size="10" font-family="monospace">REAR 240kW</text>
+
+                <!-- Front & Rear Wheels -->
+                <circle cx="560" cy="188" r="26" fill="none" stroke="#334155" stroke-width="5" />
+                <circle cx="160" cy="188" r="26" fill="none" stroke="#334155" stroke-width="5" />
+                
+                <!-- Speed & Aerodynamic Lines -->
+                <path d="M 20 150 Q 80 150 140 140" stroke="rgba(229, 169, 60, 0.4)" stroke-width="1.5" stroke-dasharray="6 6" />
+                <path d="M 10 170 Q 70 170 110 170" stroke="rgba(229, 169, 60, 0.3)" stroke-width="1.5" stroke-dasharray="8 8" />
+
+                <defs>
+                  <linearGradient id="evBodyGradient" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0%" stop-color="#0d1117" />
+                    <stop offset="50%" stop-color="#161c26" />
+                    <stop offset="100%" stop-color="#1f2736" />
+                  </linearGradient>
+                  <filter id="glowAmber" x="-20%" y="-20%" width="140%" height="140%">
+                    <feGaussianBlur stdDeviation="4" result="blur" />
+                    <feMerge>
+                      <feMergeNode in="blur" />
+                      <feMergeNode in="SourceGraphic" />
+                    </feMerge>
+                  </filter>
+                </defs>
+              </svg>
+            </div>
+
+            <!-- Telemetry HUD 4-Gauge Readouts -->
+            <div class="telemetry-gauges-grid">
+              <!-- Gauge 1 -->
+              <div class="telemetry-gauge-card">
+                <div class="gauge-label"><span>🔋</span> Battery Pack SoC</div>
+                <div class="gauge-val">94.2<span class="unit">%</span></div>
+                <div class="gauge-subtext">78.2 kWh Fleet Average</div>
+                <div class="gauge-progress-bar">
+                  <div class="gauge-progress-fill" style="width: 94%;"></div>
+                </div>
+              </div>
+
+              <!-- Gauge 2 -->
+              <div class="telemetry-gauge-card">
+                <div class="gauge-label"><span>⚡</span> Real-World Range</div>
+                <div class="gauge-val">324.5<span class="unit">KM</span></div>
+                <div class="gauge-subtext">EPA & WLTP Verified Average</div>
+                <div class="gauge-progress-bar">
+                  <div class="gauge-progress-fill" style="width: 82%;"></div>
+                </div>
+              </div>
+
+              <!-- Gauge 3 -->
+              <div class="telemetry-gauge-card">
+                <div class="gauge-label"><span>🚀</span> Energy Efficiency</div>
+                <div class="gauge-val">15.2<span class="unit">kWh/100km</span></div>
+                <div class="gauge-subtext">Dual Motor Synchronous AWD</div>
+                <div class="gauge-progress-bar">
+                  <div class="gauge-progress-fill" style="width: 76%;"></div>
+                </div>
+              </div>
+
+              <!-- Gauge 4 -->
+              <div class="telemetry-gauge-card">
+                <div class="gauge-label"><span>🌐</span> Monitored Sales</div>
+                <div class="gauge-val">1.55<span class="unit">Billion</span></div>
+                <div class="gauge-subtext">Global Fleet Annual Volume</div>
+                <div class="gauge-progress-bar">
+                  <div class="gauge-progress-fill" style="width: 89%;"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Floating Benchmark Badge (Bottom-Left matching reference screenshot 2) -->
+            <div class="floating-badge badge-left">
+              <div class="badge-icon">📈</div>
+              <div>
+                <div class="badge-text-primary">89%</div>
+                <div class="badge-text-secondary">Success Benchmark • Past 7 Days ▾</div>
+              </div>
+            </div>
+
+            <!-- Floating KPI Badge (Top-Right matching reference screenshot 2) -->
+            <div class="floating-badge badge-right">
+              <div class="badge-icon">⚡</div>
+              <div>
+                <div class="badge-text-primary">1.55B+</div>
+                <div class="badge-text-secondary">Annual EV Sales Tracked</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         2. ABOUT SECTION (Matching Reference Screenshot 4)
+         ========================================================================== -->
+    <section id="about" class="section-padding">
+      <div class="container">
+        <div class="about-grid">
+          <!-- Left Column: Sleek Modern EV Visual Showcase -->
+          <div class="about-visual">
+            <div class="car-image-card">
+              <img src="{{ url_for('static', filename='images/ev-car.png') }}" alt="Electric Vehicle Innovation Showcase">
+              <div class="car-image-overlay">
+                <div>
+                  <div style="font-size: 0.8rem; color: var(--accent-gold); font-weight: 700; text-transform: uppercase;">Next-Gen Fleet</div>
+                  <div style="font-size: 1.1rem; font-weight: 800; color: #fff;">Electric Mobility Evolution</div>
+                </div>
+                <span class="btn btn-gold btn-sm" style="pointer-events: none;">324.5 KM Avg Range</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column: Narrative & 4 Concise Feature Cards -->
+          <div class="about-content">
+            <div class="about-author-badge">
+              <span>PR</span> Created by Priyanshu Vara
+            </div>
+            
+            <h2 class="section-title">Insights Behind the EV Story</h2>
+            <div class="about-subheading">Tracking adoption, momentum, and market transformation</div>
+            
+            <p class="about-paragraph">
+              The EV market is moving fast, and the data reveals a clear story: demand is rising, technology is improving, and consumer confidence is accelerating. This dashboard highlights the key trends shaping the future of electric mobility and helps turn raw numbers into practical insight.
+            </p>
+            <p class="about-paragraph" style="margin-top: -1rem; font-size: 0.92rem; color: var(--text-muted);">
+              This research project comprehensively explores EV adoption, manufacturers, models, sales, ratings, driving range, and battery technology across leading global automotive markets.
+            </p>
+
+            <!-- 4 Concise Feature Cards Grid (2x2 matching Reference Screenshot 4) -->
+            <div class="features-mini-grid">
+              <div class="feature-mini-card">
+                <div class="feature-card-icon">📈</div>
+                <h3 class="feature-mini-title">Market Growth</h3>
+                <p class="feature-mini-desc">EV adoption continues to rise as awareness, infrastructure, and affordability improve across markets.</p>
+              </div>
+
+              <div class="feature-mini-card">
+                <div class="feature-card-icon">⚡</div>
+                <h3 class="feature-mini-title">Technology Shift</h3>
+                <p class="feature-mini-desc">Battery innovation and smarter mobility solutions are making EVs more competitive and scalable.</p>
+              </div>
+
+              <div class="feature-mini-card">
+                <div class="feature-card-icon">👥</div>
+                <h3 class="feature-mini-title">Consumer Confidence</h3>
+                <p class="feature-mini-desc">Growing trust in EV performance, battery longevity, and fast charging infrastructure encourages adoption.</p>
+              </div>
+
+              <div class="feature-mini-card">
+                <div class="feature-card-icon">📊</div>
+                <h3 class="feature-mini-title">Actionable Insights</h3>
+                <p class="feature-mini-desc">Each visual point in the dashboard empowers automotive leaders, OEMs, and buyers with strategic market intelligence.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         3. FEATURES SECTION (Comprehensive Analytical Dimensions)
+         ========================================================================== -->
+    <section id="features" class="section-padding features-section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Analytical Capabilities</span>
+          <h2 class="section-title">Comprehensive Market Dimensions</h2>
+          <p class="section-description">
+            Dive into multidimensional data metrics powered by interactive Tableau visualizations, linking manufacturer production metrics with real-world consumer adoption.
+          </p>
+        </div>
+
+        <div class="features-grid">
+          <!-- Dimension 1 -->
+          <div class="feature-box">
+            <div class="feature-box-icon">🚗</div>
+            <h3 class="feature-box-title">EV Category Performance</h3>
+            <p class="feature-box-desc">
+              Detailed tracking across 9 vehicle categories including Hatchbacks, Two-Wheeler Scooters, Sedans, Compact SUVs, Micro City Cars, Electric Trucks, and Buses.
+            </p>
+            <div class="feature-metric-pill">
+              <span>9 Categories Analyzed</span>
+            </div>
+          </div>
+
+          <!-- Dimension 2 -->
+          <div class="feature-box">
+            <div class="feature-box-icon">🏭</div>
+            <h3 class="feature-box-title">OEM Market Share</h3>
+            <p class="feature-box-desc">
+              Benchmark leading electric vehicle manufacturers such as AmpereWorks ($9.45M), CircuitWorks ($8.92M), MomentumMobility ($8.78M), SurgeDynamics ($8.76M), and TerraMotors ($8.75M).
+            </p>
+            <div class="feature-metric-pill">
+              <span>Top Global OEMs Tracked</span>
+            </div>
+          </div>
+
+          <!-- Dimension 3 -->
+          <div class="feature-box">
+            <div class="feature-box-icon">🔋</div>
+            <h3 class="feature-box-title">Battery Chemistry & Capacity</h3>
+            <p class="feature-box-desc">
+              Analysis of key cell technologies: 34% NMC, 32% LFP, 17% NCA, and emerging 16% Sodium-Ion technologies, with average fleet capacity of 78.2 kWh.
+            </p>
+            <div class="feature-metric-pill">
+              <span>78.2 kWh Avg Capacity</span>
+            </div>
+          </div>
+
+          <!-- Dimension 4 -->
+          <div class="feature-box">
+            <div class="feature-box-icon">⭐</div>
+            <h3 class="feature-box-title">Customer Satisfaction & Range</h3>
+            <p class="feature-box-desc">
+              Cross-correlating average driver ratings (4.0/5.0) against real-world driving range (324.54 KM) to assess true consumer confidence across geographical territories.
+            </p>
+            <div class="feature-metric-pill">
+              <span>324.54 KM Avg Range</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         4. SERVICES SECTION
+         ========================================================================== -->
+    <section id="services" class="section-padding">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Value Proposition</span>
+          <h2 class="section-title">Strategic Insights & Services</h2>
+          <p class="section-description">
+            Tailored analytical solutions designed to support automotive strategists, policymakers, fleet operators, and institutional researchers.
+          </p>
+        </div>
+
+        <div class="services-grid">
+          <!-- Service 1 -->
+          <div class="service-card">
+            <div>
+              <div class="service-number">01</div>
+              <h3 class="service-title">Market Intelligence & OEM Benchmarking</h3>
+              <p class="service-desc">
+                Comparative revenue, volume distribution, and product mix analysis across global electric vehicle manufacturers.
+              </p>
+            </div>
+            <ul class="service-list">
+              <li>OEM Market Share Benchmarks</li>
+              <li>Annual Production Forecasting</li>
+              <li>Price-to-Range Performance Mapping</li>
+            </ul>
+          </div>
+
+          <!-- Service 2 -->
+          <div class="service-card">
+            <div>
+              <div class="service-number">02</div>
+              <h3 class="service-title">Battery Tech & Chemistry Analytics</h3>
+              <p class="service-desc">
+                In-depth tracking of lithium-ion (NMC/LFP/NCA) and alternative sodium-ion technologies to project raw material dependency.
+              </p>
+            </div>
+            <ul class="service-list">
+              <li>Cell Chemistry Distribution</li>
+              <li>Pack Density & Range Optimization</li>
+              <li>Next-Gen Battery Transition Feasibility</li>
+            </ul>
+          </div>
+
+          <!-- Service 3 -->
+          <div class="service-card">
+            <div>
+              <div class="service-number">03</div>
+              <h3 class="service-title">Geographical Manufacturing Footprints</h3>
+              <p class="service-desc">
+                Spatial choropleth mapping of EV vehicle production across the USA, South Korea, Sweden, China, and India.
+              </p>
+            </div>
+            <ul class="service-list">
+              <li>Country-level Volume Dynamics</li>
+              <li>Regional Adoption Discrepancies</li>
+              <li>Global Supply Chain Visibility</li>
+            </ul>
+          </div>
+
+          <!-- Service 4 -->
+          <div class="service-card">
+            <div>
+              <div class="service-number">04</div>
+              <h3 class="service-title">Executive Tableau Storytelling</h3>
+              <p class="service-desc">
+                Interactive, narrative-driven presentation boards designed for boardrooms, investor relations, and regulatory reviews.
+              </p>
+            </div>
+            <ul class="service-list">
+              <li>Step-by-Step Guided Walkthrough</li>
+              <li>Filtered Dynamic Presentations</li>
+              <li>Accessible Cloud & Public Embedding</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         5. DASHBOARD SECTION (Live Interactive Tableau Embed - No Screenshots)
+         ========================================================================== -->
+    <section id="dashboard" class="section-padding" style="background: #0b0d11;">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Interactive Analytics</span>
+          <h2 class="section-title">Live EV Market Dashboard</h2>
+          <p class="section-description">
+            Interact with live filters, category distributions, manufacturer rankings, and technical metrics directly embedded from Tableau.
+          </p>
+        </div>
+
+        <!-- Embedded Tableau Dashboard Container -->
+        <div class="tableau-embed-card">
+          <!-- Embed Toolbar -->
+          <div class="embed-toolbar">
+            <div class="toolbar-status">
+              <span class="pulse-dot"></span>
+              <span>Live Tableau Visualization</span>
+            </div>
+
+            <div class="toolbar-actions">
+              <button id="btnReloadDash" class="btn btn-dark btn-sm" title="Reload iframe visualization">
+                ⟳ Reload
+              </button>
+              <button id="btnFullscreenDash" class="btn btn-dark btn-sm" title="Toggle fullscreen view">
+                ⛶ Fullscreen
+              </button>
+              <a id="btnOpenDashboardPublic" href="{{ config.dashboard_public_url if config else 'https://public.tableau.com/views/EVMarket/EVMarketDashboard' }}" target="_blank" rel="noopener noreferrer" class="btn btn-gold btn-sm">
+                Open on Tableau Public ↗
+              </a>
+              <a id="btnOpenDashboardCloud" href="{{ config.dashboard_cloud_url if config else 'https://prod-in-a.online.tableau.com/#/site/en25cs3090168-16fdac36f1/views/EVMarket/EVMarketDashboard?:iid=1' }}" target="_blank" rel="noopener noreferrer" class="btn btn-dark btn-sm">
+                Tableau Cloud ↗
+              </a>
+            </div>
+          </div>
+
+          <!-- Live Responsive Tableau Embed Frame (Preserves full interactivity, filters, and tooltips) -->
+          <div class="tableau-frame-wrapper" id="dashFrameWrapper">
+            <iframe 
+              id="tableauDashboardIframe" 
+              class="tableau-iframe"
+              src="{{ config.dashboard_embed_url if config else 'https://prod-in-a.online.tableau.com/t/en25cs3090168-16fdac36f1/views/EVMarket/EVMarketDashboard?:embed=yes&:showVizHome=no&:toolbar=yes' }}"
+              title="Electric Vehicle Market Performance Dashboard"
+              allowfullscreen="true"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              loading="lazy">
+            </iframe>
+          </div>
+        </div>
+
+        <!-- Embed Fallback / Assistance Banner -->
+        <div class="embed-fallback-banner">
+          <div class="fallback-text">
+            <div class="fallback-title">💡 Having trouble viewing the embedded Tableau dashboard?</div>
+            <div class="fallback-desc">
+              Tableau Cloud and strict browser privacy settings may restrict cross-origin third-party cookies. If the live frame does not display in your browser, click below to open the fully interactive dashboard on Tableau Public or Tableau Cloud with all filters and tooltips enabled.
+            </div>
+          </div>
+          <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+            <a id="btnOpenDashboardPublicBanner" href="{{ config.dashboard_public_url if config else 'https://public.tableau.com/views/EVMarket/EVMarketDashboard' }}" target="_blank" rel="noopener noreferrer" class="btn btn-gold btn-sm">
+              Open Live Dashboard on Tableau Public ↗
+            </a>
+            <a id="btnOpenDashboardCloudBanner" href="{{ config.dashboard_cloud_url if config else 'https://prod-in-a.online.tableau.com/#/site/en25cs3090168-16fdac36f1/views/EVMarket/EVMarketDashboard?:iid=1' }}" target="_blank" rel="noopener noreferrer" class="btn btn-dark btn-sm">
+              Open Direct Cloud URL ↗
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         6. STORY SECTION (Live Interactive Tableau Story Embed - No Screenshots)
+         ========================================================================== -->
+    <section id="story" class="section-padding">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Narrative Journey</span>
+          <h2 class="section-title">EV Market Performance Story</h2>
+          <p class="section-description">
+            Experience a structured 6-phase analytical narrative revealing how market forces, manufacturing distribution, and battery chemistry drive adoption.
+          </p>
+        </div>
+
+        <!-- Embedded Tableau Story Container -->
+        <div class="tableau-embed-card">
+          <!-- Story Chapter Reference Bar -->
+          <div class="story-chapters-bar">
+            <span class="story-chapter-pill active">1. Drivers Driving Adoption</span>
+            <span class="story-chapter-pill">2. Customer Engagement Across Categories</span>
+            <span class="story-chapter-pill">3. Growth Trend in Annual EV Sales</span>
+            <span class="story-chapter-pill">4. Battery Technology Market Share</span>
+            <span class="story-chapter-pill">5. Global EV Manufacturing Footprint</span>
+            <span class="story-chapter-pill">6. Key Recommendations & Outlook</span>
+          </div>
+
+          <!-- Embed Toolbar -->
+          <div class="embed-toolbar">
+            <div class="toolbar-status">
+              <span class="pulse-dot"></span>
+              <span>Live Tableau Story Journey</span>
+            </div>
+
+            <div class="toolbar-actions">
+              <button id="btnReloadStory" class="btn btn-dark btn-sm" title="Reload story iframe visualization">
+                ⟳ Reload
+              </button>
+              <button id="btnFullscreenStory" class="btn btn-dark btn-sm" title="Fullscreen view">
+                ⛶ Fullscreen
+              </button>
+              <a id="btnOpenStoryPublic" href="{{ config.story_public_url if config else 'https://public.tableau.com/views/EVMarketprojecttableau/Story1' }}" target="_blank" rel="noopener noreferrer" class="btn btn-gold btn-sm">
+                Open Story on Tableau Public ↗
+              </a>
+              <a id="btnOpenStoryCloud" href="{{ config.story_cloud_url if config else 'https://prod-in-a.online.tableau.com/#/site/en25cs3090168-16fdac36f1/views/EVMarketprojecttableau/Story1?:iid=1' }}" target="_blank" rel="noopener noreferrer" class="btn btn-dark btn-sm">
+                Story Cloud URL ↗
+              </a>
+            </div>
+          </div>
+
+          <!-- Live Responsive Tableau Story Frame (Story navigation visible & interactive) -->
+          <div class="tableau-frame-wrapper tableau-story-wrapper" id="storyFrameWrapper">
+            <iframe 
+              id="tableauStoryIframe" 
+              class="tableau-iframe tableau-story-iframe"
+              src="{{ config.story_embed_url if config else 'https://prod-in-a.online.tableau.com/t/en25cs3090168-16fdac36f1/views/EVMarketprojecttableau/Story1?:embed=yes&:showVizHome=no&:toolbar=yes' }}"
+              title="Electric Vehicle Market Performance Story"
+              allowfullscreen="true"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              loading="lazy">
+            </iframe>
+          </div>
+        </div>
+
+        <!-- Story Embed Fallback Banner -->
+        <div class="embed-fallback-banner">
+          <div class="fallback-text">
+            <div class="fallback-title">📖 Need to open the story externally?</div>
+            <div class="fallback-desc">
+              If browser cookie restrictions prevent interactive story tab switching inside the frame, access the live narrative directly on Tableau Public or Tableau Cloud.
+            </div>
+          </div>
+          <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+            <a id="btnOpenStoryPublicBanner" href="{{ config.story_public_url if config else 'https://public.tableau.com/views/EVMarketprojecttableau/Story1' }}" target="_blank" rel="noopener noreferrer" class="btn btn-gold btn-sm">
+              Open Story on Tableau Public ↗
+            </a>
+            <a id="btnOpenStoryCloudBanner" href="{{ config.story_cloud_url if config else 'https://prod-in-a.online.tableau.com/#/site/en25cs3090168-16fdac36f1/views/EVMarketprojecttableau/Story1?:iid=1' }}" target="_blank" rel="noopener noreferrer" class="btn btn-dark btn-sm">
+              Open Story Cloud URL ↗
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         7. PROJECT ARCHITECTURE & JIRA SHOWCASE (Matching Reference Image 1 & 2)
+         ========================================================================== -->
+    <section class="section-padding project-meta-section">
+      <div class="container">
+        <div class="project-meta-card">
+          <div class="meta-header-row">
+            <div>
+              <div class="jira-badge-group">
+                <span class="jira-tag story">Story</span>
+                <span class="jira-tag duration">Duration: 2h 30m</span>
+              </div>
+              <h3 style="font-size: 1.45rem; margin-top: 0.6rem;">Embed Dashboard & Story with Flask</h3>
+            </div>
+            <div class="jira-assignee">
+              <span class="assignee-avatar">PV</span>
+              <span>Assigned to <strong>Priyanshu Vara</strong></span>
+            </div>
+          </div>
+
+          <p style="font-size: 0.95rem; color: var(--text-secondary); margin-bottom: 1.5rem; line-height: 1.65;">
+            This project demonstrates how to embed <strong>Tableau Dashboards and Stories</strong> within a Flask web application to provide interactive, real-time access to electric vehicle market intelligence. By integrating Tableau’s powerful visualization capabilities with Flask’s lightweight framework, users can explore dashboards directly in a browser, making the analysis more accessible, shareable, and actionable for industry professionals and researchers.
+          </p>
+
+          <h4 style="font-size: 1rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--accent-gold); margin-bottom: 0.5rem;">
+            Technologies & Tools Used:
+          </h4>
+          <div class="tech-stack-grid">
+            <div class="tech-item">
+              <div class="tech-icon">🌐</div>
+              <div>
+                <div class="tech-name">HTML</div>
+                <div class="tech-role">To structure the web page.</div>
+              </div>
+            </div>
+            <div class="tech-item">
+              <div class="tech-icon">🎨</div>
+              <div>
+                <div class="tech-name">CSS</div>
+                <div class="tech-role">To style the page and improve visual appearance.</div>
+              </div>
+            </div>
+            <div class="tech-item">
+              <div class="tech-icon">📊</div>
+              <div>
+                <div class="tech-name">Tableau Public</div>
+                <div class="tech-role">To host and share the interactive dashboard.</div>
+              </div>
+            </div>
+            <div class="tech-item">
+              <div class="tech-icon">💻</div>
+              <div>
+                <div class="tech-name">Visual Studio Code</div>
+                <div class="tech-role">Used as the development environment for writing and editing the webpage code.</div>
+              </div>
+            </div>
+            <div class="tech-item">
+              <div class="tech-icon">🐍</div>
+              <div>
+                <div class="tech-name">Flask (Python)</div>
+                <div class="tech-role">Lightweight backend microframework & template routing.</div>
+              </div>
+            </div>
+            <div class="tech-item">
+              <div class="tech-icon">⚡</div>
+              <div>
+                <div class="tech-name">JavaScript</div>
+                <div class="tech-role">Fullscreen API, dynamic typewriter, and responsive event handling.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ==========================================================================
+       FOOTER
+       ========================================================================== -->
+  <footer class="site-footer" role="contentinfo">
+    <div class="container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <div class="brand-logo">
+            <span class="brand-icon">⚡</span>
+            <span>EV Insights</span>
+          </div>
+          <p>
+            An interactive analytics platform exploring electric vehicle adoption, manufacturer dynamics, battery technologies, and consumer satisfaction across global markets.
+          </p>
+        </div>
+
+        <div>
+          <h4 class="footer-title">Navigation</h4>
+          <ul class="footer-links">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#services">Services</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="footer-title">Visualizations</h4>
+          <ul class="footer-links">
+            <li><a href="#dashboard">EV Market Dashboard</a></li>
+            <li><a href="#story">Narrative Story</a></li>
+            <li><a href="https://prod-in-a.online.tableau.com/#/site/en25cs3090168-16fdac36f1/views/EVMarket/EVMarketDashboard?:iid=1" target="_blank" rel="noopener">Tableau Cloud</a></li>
+            <li><a href="https://public.tableau.com" target="_blank" rel="noopener">Tableau Public</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="footer-title">Author Credit</h4>
+          <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 0.6rem;">
+            Lead Developer & Analyst:
+          </p>
+          <div style="font-size: 1.05rem; font-weight: 700; color: #fff; margin-bottom: 0.5rem;">
+            Priyanshu Vara
+          </div>
+          <p style="font-size: 0.8rem; color: var(--text-muted);">
+            Electric Vehicle Market Performance & Insights Project
+          </p>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div>
+          © 2026 Electric Vehicle Market Performance & Insights. All rights reserved.
+        </div>
+        <div>
+          Created with precision by <span class="author-credit-tag">Priyanshu Vara</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Floating Back to Top Button (Matching Reference Screenshot 3 & 4) -->
+  <button id="backToTopBtn" class="back-to-top" aria-label="Back to top" title="Scroll to top">
+    ↑
+  </button>
+
+  <!-- Main JavaScript File -->
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
